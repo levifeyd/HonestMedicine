@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group( function () {
+    Route::get('/show-all', [\App\Http\Controllers\ItemController::class, 'showAll']);
     Route::get('/create', [\App\Http\Controllers\ItemController::class, 'create']);
     Route::get('/item{id}', [\App\Http\Controllers\ItemController::class, 'show']);
     Route::put('/update{id}', [\App\Http\Controllers\ItemController::class, 'update']);

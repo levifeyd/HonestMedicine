@@ -10,6 +10,9 @@ use Illuminate\Http\JsonResponse;
 class ItemController extends Controller
 {
 
+    public function showAll(): JsonResponse {
+        return response()->json((new ItemRepository())->all());
+    }
     public function show($id): JsonResponse {
         return response()->json((new ItemRepository())->getById($id));
     }

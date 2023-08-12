@@ -18,7 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get('/', [ItemController::class, 'index'])->name('index');
 
 Auth::routes();
 

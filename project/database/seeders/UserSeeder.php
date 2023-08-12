@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         User::query()->create([
             'name'=>'artem',
             'email' => 'artem@mail.ru',
+            'remember_token' => bcrypt('u1'),
             'password' => bcrypt('qweasdzxc'),
         ]);
     }

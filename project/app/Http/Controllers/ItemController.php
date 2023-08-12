@@ -17,20 +17,20 @@ class ItemController extends Controller
         return response()->json((new ItemRepository())->getById($id));
     }
 
-    public function update(ItemRequest $request): JsonResponse
+    public function update(ItemRequest $request, int $id): JsonResponse
     {
-        Item::query()->update([$request->all()]);
-        return response()->json('Success, item edited');
+        (new ItemRepository())->updateById($id, $request->all());
+        return response()->json('Success, item updated');
     }
 
-    public function store(ItemRequest $request) {
-        $item = Item::query()->create($request->all());
-        return $this->sendResponse($item,'Success, item crated');
+    public function store(ItemRequest $request): JsonResponse {
+        (new ItemRepository())->create($request->all());
+        return response()->json('Success, item created');
     }
 
-    public function delete($id) {
-        Item::query()->findl($id)->delete();
-        return $this->sendResponse('Success, item deleted');
+    public function delete($id): JsonResponse {
+        (new ItemRepository())->deleteById($id);
+        return response()->json('Success, item deleted');
     }
 
 }

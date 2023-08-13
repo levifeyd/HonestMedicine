@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use  App\Http\Controllers\PersonalAccessTokenController;
+use \App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +21,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group( function () {
-    Route::get('/show-all', [\App\Http\Controllers\ItemController::class, 'showAll']);
-    Route::get('/item/{id}', [\App\Http\Controllers\ItemController::class, 'show']);
-    Route::post('/store', [\App\Http\Controllers\ItemController::class, 'store']);
-    Route::put('/update/{id}', [\App\Http\Controllers\ItemController::class, 'update']);
-    Route::delete('/delete/{id}', [\App\Http\Controllers\ItemController::class, 'delete']);
+    Route::get('/show-all', [ItemController::class, 'showAll']);
+    Route::get('/item/{id}', [ItemController::class, 'show']);
+    Route::post('/store', [ItemController::class, 'store']);
+    Route::put('/update/{id}', [ItemController::class, 'update']);
+    Route::delete('/delete/{id}', [ItemController::class, 'delete']);
 });
 Route::post('personal-access-tokens', [PersonalAccessTokenController::class, 'store']);
 

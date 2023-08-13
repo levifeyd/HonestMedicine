@@ -3,50 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
-use App\Models\Item;
-use App\Repositories\ItemRepository;
+use App\Services\ItemService;
 use Illuminate\Http\JsonResponse;
+use Exception;
 
 class ItemController extends Controller
 {
-
-    public function showAll(): JsonResponse {
-        return response()->json([
-            'message'=>'Success',
-            'data'=>(new ItemRepository())->all()
-        ],
-            200);
-    }
-    public function show(int $id): JsonResponse {
-        return response()->json([
-            'message'=>'Success',
-            'data'=>(new ItemRepository())->getById($id)
-        ], 200);
-    }
-
-    public function update(ItemRequest $request, int $id): JsonResponse
+    private ItemService $itemService;
+    public function __construct(ItemService $itemService)
     {
-        (new ItemRepository())->updateById($id, $request->all());
-        return response()->json([
-            'message'=>'Success, item updated',
-            'data'=>'ok'
-        ], 200);
+        $this->itemService = $itemService;
     }
 
-    public function store(ItemRequest $request): JsonResponse {
-        (new ItemRepository())->create($request->all());
-        return response()->json([
-            'message'=>'Success, item created',
-            'data'=>'ok'
-        ], 200);
+    public function showAll() {
+        return $this->successResponse($this->itemService->showAll());
+    }
+    public function show(int $id) {
+        try {
+            $data = $this->itemService->show($id);
+            return $this->successResponse($data);
+        }
+        catch (Exception $exception) {
+            $this->errorResponse();
+        }
     }
 
-    public function delete($id): JsonResponse {
-        (new ItemRepository())->deleteById($id);
+    public function update(ItemRequest $request, int $id)
+    {
+        try {
+            $data = $this->itemService->update($request, $id);
+            return $this->successResponse($data, "Success, item updated!");
+        }
+        catch (Exception $exception) {
+            $this->errorResponse();
+        }
+    }
+
+    public function store(ItemRequest $request) {
+        try {
+            $data = $this->itemService->store($request);
+            return $this->successResponse($data);
+        }
+        catch (Exception $exception) {
+            $this->errorResponse("Success, item stored!");
+        }
+    }
+
+    public function delete($id) {
+        try {
+            $data = $this->itemService->delete($id);
+            return $this->successResponse($data, "Success, item deleted!");
+        }
+        catch (Exception $exception) {
+            $this->errorResponse();
+        }
+    }
+
+    protected function successResponse($data, $message = null, $status = 200)
+    {
         return response()->json([
-            'message'=>'Success, item deleted',
-            'data'=>'ok'
-        ], 200);
+            'success' => true,
+            'message' => $message,
+            'data' => $data
+        ], $status);
+    }
+
+    protected function errorResponse($message = 'Something went wrong', $status = 500): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+        ], $status);
     }
 
 }

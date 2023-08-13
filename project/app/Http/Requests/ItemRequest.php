@@ -25,7 +25,7 @@ class ItemRequest extends FormRequest
     {
         return [
             'name'=>'string',
-            'key' => 'required',
+            'key' => 'required|string|max:25',
         ];
     }
 }

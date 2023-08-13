@@ -22,8 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('/show-all', [\App\Http\Controllers\ItemController::class, 'showAll']);
     Route::get('/item/{id}', [\App\Http\Controllers\ItemController::class, 'show']);
-    Route::post('/update/{id}', [\App\Http\Controllers\ItemController::class, 'update']);
     Route::post('/store', [\App\Http\Controllers\ItemController::class, 'store']);
-    Route::delete('/delete/{$id}', [\App\Http\Controllers\ItemController::class, 'delete']);
-    Route::post('personal-access-tokens', [PersonalAccessTokenController::class, 'store']);
+    Route::put('/update/{id}', [\App\Http\Controllers\ItemController::class, 'update']);
+    Route::delete('/delete/{id}', [\App\Http\Controllers\ItemController::class, 'delete']);
 });
+Route::post('personal-access-tokens', [PersonalAccessTokenController::class, 'store']);
+

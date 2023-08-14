@@ -9,28 +9,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class ItemService
 {
+    private ItemRepository $itemRepository;
+    public function __construct(ItemRepository $itemRepository)
+    {
+        $this->itemRepository = $itemRepository;
+    }
 
     public function showAll():Collection {
-        return (new ItemRepository())->all();
+        return $this->itemRepository->all();
     }
-    public function show($id):Model {
-        return (new ItemRepository())->getById($id);
+    public function show($id): Model {
+        return $this->itemRepository->getById($id);
     }
 
-    public function update(ItemRequest $request, int $id):Model {
-        return (new ItemRepository())->updateById($id, $request->all());
+    public function update(ItemRequest $request, int $id): Model {
+        return $this->itemRepository->updateById($id, $request->all());
     }
 
     public function store(ItemRequest $request):Model {
-        return (new ItemRepository())->create($request->all());
+        return $this->itemRepository->create($request->all());
     }
 
     public function delete($id):bool {
         try {
-            (new ItemRepository())->deleteById($id);
-            return true;
+            $item = $this->itemRepository->deleteById($id);
+            return $item;
         } catch (\Exception $exception) {
-            return false;
+            throw $exception;
         }
     }
 }

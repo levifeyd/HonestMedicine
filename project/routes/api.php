@@ -22,10 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('/show-all', [ItemController::class, 'showAll']);
-    Route::get('/item/{id}', [ItemController::class, 'show']);
+    Route::get('/show/{id}', [ItemController::class, 'show']);
     Route::post('/store', [ItemController::class, 'store']);
     Route::put('/update/{id}', [ItemController::class, 'update']);
     Route::delete('/delete/{id}', [ItemController::class, 'delete']);
 });
-Route::post('personal-access-tokens', [PersonalAccessTokenController::class, 'store']);
+Route::post('personal-access-tokens', [PersonalAccessTokenController::class, 'getToken']);
 

@@ -85,7 +85,6 @@ abstract class BaseRepository implements RepositoryContract
     public function __call($scope, $args)
     {
         $this->scopes[$scope] = $args;
-
         return $this;
     }
 
@@ -102,11 +101,9 @@ abstract class BaseRepository implements RepositoryContract
     public function makeModel()
     {
         $model = resolve($this->model());
-
         if (! $model instanceof Model) {
             throw new GeneralException("Class {$this->model()} must be an instance of " . Model::class);
         }
-
         return $this->model = $model;
     }
 
@@ -118,11 +115,8 @@ abstract class BaseRepository implements RepositoryContract
     public function all(array $columns = ['*'])
     {
         $this->newQuery()->eagerLoad();
-
         $models = $this->query->get($columns);
-
         $this->unsetClauses();
-
         return $models;
     }
 
@@ -142,7 +136,6 @@ abstract class BaseRepository implements RepositoryContract
     public function create(array $data)
     {
         $this->unsetClauses();
-
         return $this->model->create($data);
     }
 
@@ -154,11 +147,7 @@ abstract class BaseRepository implements RepositoryContract
     public function firstOrNew(array $data)
     {
         $this->unsetClauses();
-
         return $this->model->firstOrCreate($data);
-
-
-
     }
 
     /**
@@ -169,11 +158,9 @@ abstract class BaseRepository implements RepositoryContract
     public function createMultiple(array $data)
     {
         $models = new Collection();
-
         foreach ($data as $d) {
             $models->push($this->create($d));
         }
-
         return $models;
     }
 
@@ -183,11 +170,8 @@ abstract class BaseRepository implements RepositoryContract
     public function delete()
     {
         $this->newQuery()->setClauses()->setScopes();
-
         $result = $this->query->delete();
-
         $this->unsetClauses();
-
         return $result;
     }
 
@@ -202,7 +186,6 @@ abstract class BaseRepository implements RepositoryContract
     public function deleteById($id): bool
     {
         $this->unsetClauses();
-
         return $this->getById($id)->delete();
     }
 
@@ -222,11 +205,8 @@ abstract class BaseRepository implements RepositoryContract
     public function first(array $columns = ['*'])
     {
         $this->newQuery()->eagerLoad()->setClauses()->setScopes();
-
         $model = $this->query->firstOrFail($columns);
-
         $this->unsetClauses();
-
         return $model;
     }
 
@@ -238,11 +218,8 @@ abstract class BaseRepository implements RepositoryContract
     public function get(array $columns = ['*'])
     {
         $this->newQuery()->eagerLoad()->setClauses()->setScopes();
-
         $models = $this->query->get($columns);
-
         $this->unsetClauses();
-
         return $models;
     }
 
@@ -255,9 +232,7 @@ abstract class BaseRepository implements RepositoryContract
     public function getById($id, array $columns = ['*'])
     {
         $this->unsetClauses();
-
         $this->newQuery()->eagerLoad();
-
         return $this->query->findOrFail($id, $columns);
     }
 
@@ -269,9 +244,7 @@ abstract class BaseRepository implements RepositoryContract
     public function getByColumn($item, $column, array $columns = ['*'])
     {
         $this->unsetClauses();
-
         $this->newQuery()->eagerLoad();
-
         return $this->query->where($column, $item)->first($columns);
     }
 
@@ -284,11 +257,8 @@ abstract class BaseRepository implements RepositoryContract
     public function paginate($limit = 25, array $columns = ['*'], $pageName = 'page', $page = null)
     {
         $this->newQuery()->eagerLoad()->setClauses()->setScopes();
-
         $models = $this->query->paginate($limit, $columns, $pageName, $page);
-
         $this->unsetClauses();
-
         return $models;
     }
 
@@ -301,11 +271,8 @@ abstract class BaseRepository implements RepositoryContract
     public function updateById($id, array $data, array $options = [])
     {
         $this->unsetClauses();
-
         $model = $this->getById($id);
-
         $model->update($data, $options);
-
         return $model;
     }
 
@@ -318,7 +285,6 @@ abstract class BaseRepository implements RepositoryContract
     public function limit($limit)
     {
         $this->take = $limit;
-
         return $this;
     }
 
@@ -332,7 +298,6 @@ abstract class BaseRepository implements RepositoryContract
     public function orderBy($column, $direction = 'asc')
     {
         $this->orderBys[] = compact('column', 'direction');
-
         return $this;
     }
 
@@ -347,7 +312,6 @@ abstract class BaseRepository implements RepositoryContract
     public function where($column, $value, $operator = '=')
     {
         $this->wheres[] = compact('column', 'value', 'operator');
-
         return $this;
     }
 
@@ -360,9 +324,7 @@ abstract class BaseRepository implements RepositoryContract
     public function whereIn($column, $values)
     {
         $values = is_array($values) ? $values : [$values];
-
         $this->whereIns[] = compact('column', 'values');
-
         return $this;
     }
 
@@ -377,9 +339,7 @@ abstract class BaseRepository implements RepositoryContract
         if (is_string($relations)) {
             $relations = func_get_args();
         }
-
         $this->with = $relations;
-
         return $this;
     }
 
@@ -393,11 +353,8 @@ abstract class BaseRepository implements RepositoryContract
     public function pluck($column, $key = null)
     {
         $this->newQuery();
-
         $results = $this->query->pluck($column, $key);
-
         $this->unsetClauses();
-
         return $results;
     }
 
@@ -409,7 +366,6 @@ abstract class BaseRepository implements RepositoryContract
     protected function newQuery()
     {
         $this->query = $this->model->newQuery();
-
         return $this;
     }
 
@@ -423,7 +379,6 @@ abstract class BaseRepository implements RepositoryContract
         foreach ($this->with as $relation) {
             $this->query->with($relation);
         }
-
         return $this;
     }
 
@@ -437,19 +392,15 @@ abstract class BaseRepository implements RepositoryContract
         foreach ($this->wheres as $where) {
             $this->query->where($where['column'], $where['operator'], $where['value']);
         }
-
         foreach ($this->whereIns as $whereIn) {
             $this->query->whereIn($whereIn['column'], $whereIn['values']);
         }
-
         foreach ($this->orderBys as $orders) {
             $this->query->orderBy($orders['column'], $orders['direction']);
         }
-
         if (isset($this->take) && null !== $this->take) {
             $this->query->take($this->take);
         }
-
         return $this;
     }
 
@@ -463,7 +414,6 @@ abstract class BaseRepository implements RepositoryContract
         foreach ($this->scopes as $method => $args) {
             $this->query->{$method}(...$args);
         }
-
         return $this;
     }
 
@@ -478,7 +428,6 @@ abstract class BaseRepository implements RepositoryContract
         $this->whereIns = [];
         $this->scopes = [];
         $this->take = null;
-
         return $this;
     }
 }

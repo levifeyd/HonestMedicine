@@ -3,49 +3,51 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
+use App\Repositories\ItemRepository;
 use App\Services\ItemService;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Illuminate\Support\Facades\Request;
 
 class ItemController extends Controller
 {
     private ItemService $itemService;
     public function __construct(ItemService $itemService)
     {
-        $this->itemService = $itemService;
+            $this->itemService = $itemService;
     }
 
-    public function showAll() {
+    public function showAll(): JsonResponse {
         return $this->successResponse($this->itemService->showAll());
     }
     public function show(int $id) {
         try {
             $data = $this->itemService->show($id);
             return $this->successResponse($data);
+        } catch (Exception $exception) {
+            return $this->errorResponse('Item doesnt exist');
         }
-        catch (Exception $exception) {
-            $this->errorResponse();
-        }
+
+
     }
 
-    public function update(ItemRequest $request, int $id)
-    {
+    public function update(ItemRequest $request, int $id) {
         try {
             $data = $this->itemService->update($request, $id);
             return $this->successResponse($data, "Success, item updated!");
         }
         catch (Exception $exception) {
-            $this->errorResponse();
+            return $this->errorResponse('Item doesnt exist');
         }
     }
 
     public function store(ItemRequest $request) {
         try {
             $data = $this->itemService->store($request);
-            return $this->successResponse($data);
+            return $this->successResponse($data, "Success, item stored!");
         }
         catch (Exception $exception) {
-            $this->errorResponse("Success, item stored!");
+            return $this->errorResponse('Item doesnt exist');
         }
     }
 
@@ -55,25 +57,8 @@ class ItemController extends Controller
             return $this->successResponse($data, "Success, item deleted!");
         }
         catch (Exception $exception) {
-            $this->errorResponse();
+            return $this->errorResponse('Item doesnt exist');
         }
-    }
-
-    protected function successResponse($data, $message = null, $status = 200)
-    {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $data
-        ], $status);
-    }
-
-    protected function errorResponse($message = 'Something went wrong', $status = 500): JsonResponse
-    {
-        return response()->json([
-            'success' => false,
-            'message' => $message,
-        ], $status);
     }
 
 }

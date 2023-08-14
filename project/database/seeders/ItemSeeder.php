@@ -16,8 +16,8 @@ class ItemSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['name'=>'testing', 'key' => '1'],
-            ['name'=>'testing_2', 'key' => '2'],
+            ['name'=>'test', 'key' => '1'],
+            ['name'=>'test2', 'key' => '2'],
         ];
         DB::table('items')->insert($data);
     }

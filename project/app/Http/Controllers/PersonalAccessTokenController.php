@@ -6,10 +6,12 @@ use App\Http\Requests\PersonalTokenRequest;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use \Illuminate\Http\JsonResponse;
 
 class PersonalAccessTokenController extends Controller
 {
-    public function store(PersonalTokenRequest $request) {
+    public function getToken(PersonalTokenRequest $request): JsonResponse
+    {
         $user = (new UserRepository())->getByColumn($request->email,'email');
         if(! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([

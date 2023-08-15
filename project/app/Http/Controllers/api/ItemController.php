@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ItemRequest;
-use App\Repositories\ItemRepository;
 use App\Services\ItemService;
-use Illuminate\Http\JsonResponse;
 use Exception;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\JsonResponse;
 
 class ItemController extends Controller
 {
@@ -42,13 +41,8 @@ class ItemController extends Controller
     }
 
     public function store(ItemRequest $request) {
-        try {
-            $data = $this->itemService->store($request);
-            return $this->successResponse($data, "Success, item stored!");
-        }
-        catch (Exception $exception) {
-            return $this->errorResponse('Item doesnt exist');
-        }
+        $data = $this->itemService->store($request);
+        return $this->successResponse($data, "Success, item stored!");
     }
 
     public function delete($id) {

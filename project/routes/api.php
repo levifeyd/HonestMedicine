@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\api\ItemController;
+use App\Http\Controllers\api\PersonalAccessTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use  App\Http\Controllers\PersonalAccessTokenController;
-use \App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------

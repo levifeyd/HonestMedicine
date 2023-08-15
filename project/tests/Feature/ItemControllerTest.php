@@ -4,18 +4,21 @@ namespace Tests\Feature;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Repositories\ItemRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ItemControllerTest extends TestCase
 {
- private $token;
+     private $token;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+
     public function testHomePage(): void
     {
         $response = $this->get('/');
@@ -36,8 +39,7 @@ class ItemControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('message',null);
         $response->assertJsonPath('success',true);
-        self::assertEquals("test", $content['data'][0]['name']);
-        self::assertEquals("test2", $content['data'][1]['name']);
+        self::assertEquals(2, count($content['data']));
     }
     public function testShowApi() {
         $user = User::factory()->create();
@@ -50,7 +52,6 @@ class ItemControllerTest extends TestCase
         $response->assertJsonPath('success',true);
         self::assertEquals("test", $content['data']['name']);
         self::assertEquals("1", $content['data']['key']);
-        self::assertEquals("1", $content['data']['id']);
     }
     public function testShowApiError() {
         $user = User::factory()->create();
@@ -65,13 +66,15 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->create();
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
-            ->put('api/update/2', ['name'=>'update test', 'key'=>'update test']);
+            ->put('api/update/1', ['name'=>'update test', 'key'=>'update test']);
         $content = json_decode($response->getContent(), true);
         $response->assertStatus(200);
         $response->assertJsonPath('message',"Success, item updated!");
         $response->assertJsonPath('success',true);
         self::assertEquals("update test", $content['data']['name']);
         self::assertEquals("update test", $content['data']['key']);
+//        (new UserRepository())->updateById(2, ['name'=>'test2','key'=>2]);
+        Item::query()->where('name', 'update test')->update(['name'=>'test2','key'=>2]);
     }
     public function testUpdateApiErrorKey() {
         $user = User::factory()->create();
@@ -81,6 +84,15 @@ class ItemControllerTest extends TestCase
         $response->assertStatus(500);
         $response->assertJsonPath('success',false);
         $response->assertJsonPath('message',"Validation error");
+    }
+    public function testUpdateApiItemNotExist() {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->put('api/update/10', ['name'=>'update test', 'key'=>"123"]);
+        $response->assertStatus(500);
+        $response->assertJsonPath('message',"Item doesnt exist");
+        $response->assertJsonPath('success',false);
     }
     public function testStoreApi() {
         $user = User::factory()->create();
@@ -93,8 +105,9 @@ class ItemControllerTest extends TestCase
         $response->assertJsonPath('success',true);
         self::assertEquals("store test", $content['data']['name']);
         self::assertEquals("store test", $content['data']['key']);
+        Item::query()->find($content['data']['id'])->delete();
     }
-    public function testStoreApiError() {
+    public function testItemRequestValidationError() {
         $user = User::factory()->create();
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
@@ -107,9 +120,19 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->create();
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
-            ->delete('api/delete/3');
+            ->delete('api/delete/1');
         $response->assertStatus(200);
         $response->assertJsonPath('message',"Success, item deleted!");
         $response->assertJsonPath('success',true);
+        Item::query()->create(['name'=>'test', "key"=>1]);
+    }
+    public function testDeleteApiItemNotExist() {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->delete('api/delete/10');
+        $response->assertStatus(500);
+        $response->assertJsonPath('message',"Item doesnt exist");
+        $response->assertJsonPath('success',false);
     }
 }

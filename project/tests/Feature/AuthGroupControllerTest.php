@@ -7,9 +7,10 @@ use App\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class AuthAndRegisterTest extends TestCase
+class AuthGroupControllerTest extends TestCase
 {
     protected Authenticatable|Model $user;
     protected function setUp(): void
@@ -22,24 +23,17 @@ class AuthAndRegisterTest extends TestCase
      *
      * @return void
      */
-    public function testLogin() {
+    public function testLoginRedirect() {
         $user = User::factory()->create();
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
+        $response = $this->postRequestLogin($user->email, 'password');
         $response->assertRedirect('/home');
         $this->assertAuthenticatedAs($user);
 
     }
 
-    public function testLoginRedirect() {
+    public function testLoginInvalidPassword() {
         $user = User::factory()->create();
-        $response = $this->from('/login')->post('/login', [
-            'email' => $user->email,
-            'password' => 'invalid-password',
-        ]);
-
+        $response = $this->postRequestLogin($user->email, 'invalid-password');
         $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
         $this->assertTrue(session()->hasOldInput('email'));
@@ -48,39 +42,26 @@ class AuthAndRegisterTest extends TestCase
     }
 
     public function testUserCanRegisterSuccessfully() {
-        $response = $this->post('register', [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+        $response = $this->postRequestRegister('John Doe', 'john@example.com', 'password');
         $response->assertRedirect('/home');
         $this->assertDatabaseHas('users', ['email' => 'john@example.com']);
     }
 
     public function testUserCanConfirmPasswordAndAccessSensitiveRoute() {
         Auth::login($this->user);
-        $response = $this->post('password/confirm', [
-            'password' => 'password',
-        ]);
-        $response->assertStatus(302);
+        $response = $this->post('password/confirm', ['password' => 'password',]);
+        $response->assertRedirect('/');
     }
 
     public function testUserCanLogin() {
         $user = User::factory()->create();
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
+        $response = $this->postRequestLogin($user->email, 'password');
         $response->assertRedirect('/home');
         $this->assertAuthenticatedAs($user);
     }
 
     public function testUserCannotLoginWithInvalidCredentials() {
-        $response = $this->post('/login', [
-            'email' => 'invalid@example.com',
-            'password' => 'wrongpassword',
-        ]);
+        $response = $this->postRequestLogin('invalid@example.com', 'wrong');
         $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
@@ -88,5 +69,20 @@ class AuthAndRegisterTest extends TestCase
     public function testMiddlewareAuthRedirect() {
         $response = $this->delete('delete/1');
         $response->assertRedirect('login');
+    }
+
+    private function postRequestLogin($email, $password): TestResponse {
+        return $this->from('/login')->post('/login', [
+            'email' => $email,
+            'password' => $password,
+        ]);
+    }
+    private function postRequestRegister($name, $email, $password): TestResponse {
+        return $this->post('register', [
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'password_confirmation' => $password,
+        ]);
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-class CrudItemControllerTest extends TestCase
+class WebCrudItemControllerTest extends TestCase
 {
     protected Authenticatable|Model $user;
     protected function setUp(): void

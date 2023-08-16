@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail">Введите ключ</label>
-                        <input name="key" type="text" class="form-control" id="key">
+                        <input name="key" type="text" class="form-control" id="key" required>
                     </div>
                     <button type="submit" class="btn btn-primary bg-green mt-2">Отправить</button>
                 </form>

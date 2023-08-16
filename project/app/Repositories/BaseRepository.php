@@ -57,6 +57,12 @@ abstract class BaseRepository implements RepositoryContract
      * @var array
      */
     protected array $scopes = [];
+    /**
+     * Array of one or more ORDER BY column/value pairs.
+     *
+     * @var array
+     */
+    protected array $orderBys = [];
 
     /**
      * BaseRepository constructor.
@@ -210,6 +216,21 @@ abstract class BaseRepository implements RepositoryContract
         $this->whereIns = [];
         $this->scopes = [];
         $this->take = null;
+        return $this;
+    }
+
+    /**
+     * Set an ORDER BY clause.
+     *
+     * @param  string  $column
+     * @param  string  $direction
+     * @return $this
+     */
+
+    public function orderBy($column, $direction = 'asc')
+    {
+        $this->orderBys[] = compact('column', 'direction');
+
         return $this;
     }
 }

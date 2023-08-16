@@ -11,5 +11,5 @@
 * Для тестов в используется другая база, указано в config/database.php -> 'testing'=[], а также в файле phpunit.xml <env name="DB_CONNECTION" value="testing"/>)
 * Сделать миграции и сиды : php artisan migrate --seed для рабочей таблицы и для тестовой
 * Сгенирировать ключ для приложения php artisan key:generate 
-* Для тестов : php artisan test
+* Для тестов : php artisan test, для покрытия php artisan test --coverage
 * Покрытие тестов 90%, для отображения % покрытия использовался Xdebug.

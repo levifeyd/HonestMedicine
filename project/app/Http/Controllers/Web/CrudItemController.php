@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\web;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ItemRequest;
@@ -8,7 +8,7 @@ use App\Repositories\ItemRepository;
 use App\Services\ItemService;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class CrudItemController extends Controller
 {
     private ItemService $itemService;
     /**
@@ -36,7 +36,7 @@ class HomeController extends Controller
 
     public function update($id, ItemRequest $request) {
         $this->itemService->update($request, $id);
-        return redirect('/')->with('status','Компонент отредактирован!');
+        return redirect('/home')->with('status','Компонент отредактирован!');
     }
 
     public function create() {
@@ -45,11 +45,11 @@ class HomeController extends Controller
 
     public function store(ItemRequest $request) {
         $this->itemService->store($request);
-        return redirect('/')->with('status','Компонент добавлен!');
+        return redirect('/home')->with('status','Компонент добавлен!');
     }
 
     public function delete($id) {
         $this->itemService->delete($id);
-        return redirect('/')->with('status','Компонент удален!');
+        return redirect('/home')->with('status','Компонент удален!');
     }
 }

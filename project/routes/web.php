@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\web\HomeController;
+use \App\Http\Controllers\Web\CrudItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +23,10 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::middleware('auth:sanctum')->group( function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/show/{id}', [HomeController::class, 'show'])->name('show');
-    Route::get('/create', [HomeController::class, 'create'])->name('create');
-    Route::post('/store', [HomeController::class, 'store'])->name('store');
-    Route::put('/update/{id}', [HomeController::class, 'update'])->name('update');
-    Route::delete('/delete/{id}', [HomeController::class, 'delete'])->name('delete');
+    Route::get('/home', [CrudItemController::class, 'index'])->name('home');
+    Route::get('/show/{id}', [CrudItemController::class, 'show'])->name('show');
+    Route::get('/create', [CrudItemController::class, 'create'])->name('create');
+    Route::post('/store', [CrudItemController::class, 'store'])->name('store');
+    Route::put('/update/{id}', [CrudItemController::class, 'update'])->name('update');
+    Route::delete('/delete/{id}', [CrudItemController::class, 'delete'])->name('delete');
 });

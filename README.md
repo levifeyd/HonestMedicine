@@ -8,7 +8,7 @@
 * npm install
 * npm run build
 * Добавить файл .env и создать базу данных DB_DATABASE = "имя базы данных"  и базу для тестов DB_DATABASE_TESTING = "имя базы данных"_testing
-* Для тестов в используется другая база : 'имя базы данных для проекта'_testing', указано в config/database.php -> 'testing'=[], а также в файле phpunit.xml <env name="DB_CONNECTION" value="testing"/>)
+* Для тестов в используется другая база, указано в config/database.php -> 'testing'=[], а также в файле phpunit.xml <env name="DB_CONNECTION" value="testing"/>)
 * Сделать миграции и сиды : php artisan migrate --seed для рабочей таблицы и для тестовой
 * Сгенирировать ключ для приложения php artisan key:generate 
 * Для тестов : php artisan test

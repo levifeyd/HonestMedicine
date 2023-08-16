@@ -11,7 +11,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail">Отредактируйте название или ключ</label>
                         <input name="name" type="text" class="form-control mt-2" id="name" value="{{$item->name}}">
-                        <input name="key" type="text" class="form-control mt-2" id="key" value="{{$item->key}}">
+                        <input name="key" type="text" class="form-control mt-2" id="key" value="{{$item->key}}" required>
                     </div>
                     <button type="submit" class="btn mt-2 bg-success text-white">Сохранить</button>
                 </form>

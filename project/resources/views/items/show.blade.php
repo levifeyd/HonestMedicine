@@ -9,9 +9,9 @@
                     @method('PUT')
                     @csrf
                     <div class="form-group">
-                        <label for="exampleInputEmail">Напишите название</label>
-                        <input name="name" type="text" class="form-control mt-2" id="name">
-                        <input name="key" type="text" class="form-control mt-2" id="key">
+                        <label for="exampleInputEmail">Отредактируйте название или ключ</label>
+                        <input name="name" type="text" class="form-control mt-2" id="name" value="{{$item->name}}">
+                        <input name="key" type="text" class="form-control mt-2" id="key" value="{{$item->key}}">
                     </div>
                     <button type="submit" class="btn mt-2 bg-success text-white">Сохранить</button>
                 </form>

@@ -13,3 +13,4 @@
 * Сгенирировать ключ для приложения php artisan key:generate 
 * Для тестов : php artisan test, для покрытия php artisan test --coverage
 * Покрытие тестов 90%, для отображения % покрытия использовался Xdebug.
+* Для тестирования api нужен api токен, его пожно получить отправив post запрос на /api/personal-access-tokens c телом запроса email и password указынные UserSeeder.php

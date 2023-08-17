@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Item;
 use App\Repositories\ItemRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
